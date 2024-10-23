@@ -4,6 +4,26 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const router = express.Router();
 
+const authenticate = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Authorization header missing' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  if (!token) {
+    return res.status(401).json({ error: 'Token missing' });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decoded.userId;
+    next();
+  } catch (err) {
+    return res.status(401).json({ error: 'Invalid token' });
+  }
+};
+
 router.post('/register', async (req, res) => {
   const { email, password } = req.body;
   const password_hash = await bcrypt.hash(password, 10);

@@ -22,4 +22,18 @@ router.post('/login', async (req, res) => {
   res.json({ user, access_token: token });
 });
 
+router.get('/current', authenticate, async (req, res) => {
+  try {
+    const user = await User.findByPk(req.userId, {
+      attributes: { exclude: ['password_hash'] }  // Исключаем хэш пароля из ответа
+    });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ user });
+  } catch (error) {
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
+
 module.exports = router;

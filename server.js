@@ -14,6 +14,10 @@ app.use('/api/transactions', transactionRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/plans', planRoutes);
 
+app.get('/', (req, res) => {
+    res.status(200).json({message: "всё норм"})
+})
+
 const PORT = process.env.PORT || 3000;
 
 sequelize.sync().then(() => {

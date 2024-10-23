@@ -5,9 +5,16 @@ const authRoutes = require('./routes/auth');
 const transactionRoutes = require('./routes/transactions');
 const categoryRoutes = require('./routes/categories');
 const planRoutes = require('./routes/plans');
+const cors = require('cors')
 
 const app = express();
 app.use(bodyParser.json());
+
+app.use(cors({
+    origin: 'https://finance-manager-eosin.vercel.app',
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+}))
 
 app.use('/api/auth', authRoutes);
 app.use('/api/transactions', transactionRoutes);
